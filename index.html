@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="COLLAGE enables task-adaptive multi-feature data retrieval for few-shot imitation learning." />
+  <!-- <title>COLLAGE: Adaptive Fusion-based Retrieval for Augmented Policy Learning</title> -->
+  
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet" />
+  <link rel="stylesheet" href="./static/css/bulma.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@glidejs/glide@3.6.0/dist/css/glide.core.min.css" />
+  <link rel="stylesheet" href="./static/css/index.css" />
+</head>
+<body>
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">COLLAGE: </h1>
+            <h2 class="subtitle is-2 publication-subtitle">Adaptive Fusion-based Retrieval for Augmented Policy Learning</h2>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="https://sateeshkumar21.github.io/" target="_blank">Sateesh Kumar</a>,</span>
+                <span class="author-block">
+                  <a href="https://shivindass.github.io/" target="_blank">Shivin Dass</a>,</span>
+                  <span class="author-block">
+                    <a href="https://geopavlakos.github.io/" target="_blank">Goergios Pavlakos</a>,</span>
+                  <span class="author-block">
+                    <a href="https://robertomartinmartin.com/" target="_blank">Roberto Martín-Martín</a>
+                  </span>
+                  </div>
+                  <div class="is-size-5 publication-authors">
+                    <span class="author-block">The University of Texas at Austin
+                      <!-- <br>Conferance name and year -->
+                    </span>
+                    <!-- <span class="eql-cntrb"><small><br><sup>*</sup>Indicates Equal Contribution</small></span> -->
+                  </div>
+                  <br>
+                  <span class="is-size-4 publication-venue">Conference on Robot Learning (CoRL), 2025<span>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Rollout Carousel -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Policy Rollouts with COLLAGE</h2>
+      <figure>
+      <div class="glide" style="position: relative;">
+        <div class="glide__track" data-glide-el="track">
+          <ul class="glide__slides">
+            <li class="glide__slide"><div class="video-block"><div class="video-card"><video autoplay muted loop playsinline controls><source src="./static/videos/demo_pen_in_cup.mp4" type="video/mp4" /></video></div><p class="video-caption">Pen-Cup</p></div></li>
+            <li class="glide__slide"><div class="video-block"><div class="video-card"><video autoplay muted loop playsinline controls><source src="./static/videos/demo_chips_real.mp4" type="video/mp4" /></video></div><p class="video-caption">Chips-Box</p></div></li>
+            <li class="glide__slide"><div class="video-block"><div class="video-card"><video autoplay muted loop playsinline controls><source src="./static/videos/demo_umbrella.mp4" type="video/mp4" /></video></div><p class="video-caption">Pick-Umbrella</p></div></li>
+            <li class="glide__slide"><div class="video-block"><div class="video-card"><video autoplay muted loop playsinline controls><source src="./static/videos/demo_spatula.mp4" type="video/mp4" /></video></div><p class="video-caption">Stir-Spatula</p></div></li>
+            <li class="glide__slide"><div class="video-block"><div class="video-card"><video autoplay muted loop playsinline controls><source src="./static/videos/demo_lego.mp4" type="video/mp4" /></video></div><p class="video-caption">Stack-Lego</p></div></li>
+            <li class="glide__slide"><div class="video-block"><div class="video-card"><video autoplay muted loop playsinline controls><source src="./static/videos/demo_scrub.mp4" type="video/mp4" /></video></div><p class="video-caption">Scrub-Plate</p></div></li>
+          </ul>
+        </div>
+        <div class="glide__arrows" data-glide-el="controls">
+          <button class="glide__arrow glide__arrow--left" data-glide-dir="<">‹</button>
+          <button class="glide__arrow glide__arrow--right" data-glide-dir=">">›</button>
+        </div>
+        <div class="glide__bullets" data-glide-el="controls[nav]">
+          <button class="glide__bullet" data-glide-dir="=0"></button>
+          <button class="glide__bullet" data-glide-dir="=1"></button>
+          <button class="glide__bullet" data-glide-dir="=2"></button>
+          <button class="glide__bullet" data-glide-dir="=3"></button>
+          <button class="glide__bullet" data-glide-dir="=4"></button>
+          <button class="glide__bullet" data-glide-dir="=5"></button>
+        </div>
+      </div>
+      <figcaption class="has-text-centered" style="margin-top: 1rem;">Each Policy is trained with <strong>5 target demonstrations</strong> and data retrieved using COLLAGE.</figcaption>
+        
+    </figure>
+    </div>
+  </section>
+  <!-- Abstract -->
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">    
+    <div class="column is-four-fifths">
+    <div class="content has-text-justified">
+        <p>
+    <strong>TL;DR:</strong> Few-shot imitation learning by retrieving sub-trajectories using diverse similarity metrics and adaptively weighting the retrieved data based on how well it aligns with target demonstrations under a learned policy.
+    </p>
+    </div>
+    </div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+     
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">  
+            <p>
+              In this work, we study the problem of data retrieval for few-shot imitation learning: selecting data from a large dataset to train a performant policy for a specific task, given only a few target demonstrations. Prior methods retrieve data using a single-feature distance heuristic, assuming that the best demonstrations are those that most closely resemble the target examples in visual, semantic, or motion space. However, this approach captures only a subset of the relevant information and is prone to introducing detrimental demonstrations, such as those from unrelated tasks with similar scene layouts or tasks with similar motion but divergent goals.
+            </p>
+            <p>
+              We present <strong>COLLAGE</strong>, a method for <strong>COLL</strong>ective data <strong>AG</strong>gr<strong>E</strong>gation in few-shot imitation learning that uses an adaptive late fusion mechanism to guide the selection of relevant demonstrations based on a task-specific combination of multiple cues. COLLAGE assigns weights to subsets of the dataset pre-selected using single-feature retrieval (e.g., appearance, shape, or language similarity), based on how well a policy trained on each subset predicts the few target demonstrations. These weights are then used during training to importance-sample data across the retrieved subsets. This strategy is general, feature-agnostic, and flexible, enabling COLLAGE to leverage complementary information and outperform both single-modality and multitask baselines. In extensive experiments, COLLAGE improves average performance by 5.1% in simulation (LIBERO-10) and 16.6% in real-world tasks from the DROID dataset.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <div class="container is-max-desktop has-text-centered">
+      <h2 class="title is-3">Video</h2>
+      <!-- <p class="subtitle is-6">
+        Click ▶ to watch a narrated walkthrough of the entire paper.
+      </p> -->
+    
+      <video
+        controls
+        preload="metadata"
+        style="max-width:100%; border-radius:8px;"
+      >
+        <source src="./static/videos/paper_overview.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </section>
+
+  <!-- Method Overview -->
+  <section class="section">
+    <div class="container is-max-desktop has-text-centered">
+      <h2 class="title is-3">Method Overview</h2>
+      <figure class="image">
+  <video controls autoplay loop muted playsinline style="max-width: 100%; border-radius: 8px;">
+    <source src="./static/images/method_overview_v2.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+  <figcaption class="method-caption">
+  <strong>Overview of COLLAGE.</strong>
+  <strong>1:</strong> Given a set of target demonstrations, each modality (e.g., visual, motion, shape, or language) retrieves a set of similar (sub-)trajectories from a prior dataset of diverse demonstrations. <strong>2:</strong> We use the retrieved (sub-)trajectories for each modality to train a reference policy. For each reference policy, we compute the log-likelihood of the target trajectories — that is, how well the policy predicts the target actions at each target state. These log-likelihoods are used to assign importance weights to the modalities. 
+   <strong>3:</strong> We train the final policy using all retrieved data, sampling more frequently from modalities with higher weights.
+  </figcaption>
+</figure>
+    </div>
+  </section>
+
+  
+
+  <!-- Experiments -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-full">
+          <h2 class="title is-3">Experiments</h2>
+          <div class="content">
+            <h3 class="title is-4">Simulated Experiments</h3>
+            <figure class="image">
+              <img src="./static/images/sim_results_1.png" alt="Simulated experiment results" />
+              <img src="./static/images/sim_results_2.png" alt="Simulated experiment results" />
+              <figcaption>
+                We evaluate COLLAGE on all tasks from the LIBERO-10 benchmark using 5 target demonstrations per task and 4500 demonstrations from LIBERO-90 as the prior dataset. COLLAGE achieves a <strong>10.75% relative performance improvement over the prior state-of-the-art retrieval method STRAP (ICLR ’25) </strong>. It also outperforms other single-modality retrievals, including <strong>POINTNET (Shape) by 14.25% </strong> and <strong>LANG (Language) by 25.31%</strong>. Note: All methods achieve 0% performance on the Moka-Moka task.
+              </figcaption>
+            </figure>
+
+            <h3 class="title is-4" style="margin-top: 1.5em;">Real-World Experiments</h3>
+            <figure class="image">
+              <img src="./static/images/real_world_results.png" alt="Real-world experiment results" />
+              <figcaption>
+                Real-world evaluation on six manipulation tasks using the DROID dataset. For each task, we use only <strong>5 target demonstrations</strong> and retrieve from a pool of 30k successful episodes. COLLAGE achieves an average success rate of 6.83/15, representing a <strong>58% relative performance improvement over STRAP (4.33/15) </strong> and a <strong> 64% improvement over LANG (4.16/15)</strong>. Policies trained solely on the 5 in-domain demonstrations (no retrieval) achieve only 1.00/15 success on average. In contrast, COLLAGE effectively leverages relevant demonstrations from DROID to significantly boost policy performance.
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- Weights Predicted by COLLAGE -->
+<section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Importance Weights Predicted by COLLAGE</h2>
+      <div class="has-text-centered">
+        <figure class="image" style="max-width: 950px; width: 100%; margin: 0 auto;">
+          <img src="./static/images/modality_weights_pie_chart.png" alt="Modality Weights Pie Chart" style="width: 100%; height: auto; border-radius: 8px;">
+          <figcaption style="margin-top: 0.75rem; font-size: 1rem; color: #444;">
+            <figcaption style="margin-top: 0.75rem;">
+                Importance weights assigned by <strong>COLLAGE</strong> to different modalities used in our framework (Visual, Motion, Shape, Language).              
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+ <section class="section">
+    <div class="container is-max-desktop">
+  <div class="columns is-centered has-text-centered">
+    <div class="column is-full">
+      <h2 class="title is-3">Qualitative Results</h2>
+      <p>
+        Below shows the demonstration segments (<strong style="color:#ebff38;">◼</strong>) from LIBERO-10
+        and retrieved sub-trajectories from LIBERO-90 using the visual (<strong style="color:#A87763;">◼</strong>),
+        motion (<strong style="color:#E05A4F;">◼</strong>), and shape (<strong style="color:#B087C0;">◼</strong>) modalities, respectively.
+        The <em>visual</em> modality retrieves segments that best match appearance using DINO features;
+        the <em>motion</em> modality finds those sharing similar motion patterns using Optical Flow features;
+        and the <em>shape</em> modality selects ones with comparable geometry using PointNet features.
+      </p>
+      <p class="has-text-grey">
+        Click the ← and → arrows to navigate through all tasks.
+      </p>
+    </div>
+  </div>
+</div>
+    
+    <div class="container is-max-desktop has-text-centered" id="task-container">
+         
+
+        <!-- Panel for Task 0 -->
+         <div class="task-panel" data-task="0" style="display:none;">
+    
+        <p><strong>Task Instruction:</strong> <em>"Put Both the Cream Cheese Box and the Butter in the Basket"</em></p>
+        <div class="buttons is-centered" style="margin-bottom:1rem;">
+          <button id="prev-btn" class="button is-light">&larr; Previous</button>
+          <button id="next-btn" class="button is-light">Next &rarr;</button>
+        </div>
+        <div class="video-grid" is-centered>
+           <!-- Row 0 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE2_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_ref_match_0.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE2_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_match_0.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE2_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_match_0.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE2_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_match_0.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/LIVING_ROOM_SCENE2_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_match_0.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 1 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE2_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_ref_match_1.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE2_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_match_1.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE2_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_match_1.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE2_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_match_1.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/LIVING_ROOM_SCENE2_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_match_1.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 2 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE2_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_ref_match_2.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE2_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_match_2.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE2_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_match_2.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE2_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_match_2.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 3 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE2_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_ref_match_3.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE2_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_match_3.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE2_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_match_3.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE2_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_match_3.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_3.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 4 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE2_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_ref_match_4.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE2_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_match_4.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE2_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_match_4.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE2_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_match_4.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_4.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          
+
+        </div>
+      </div>
+
+      <div class="task-panel" data-task="1" style="display:none;">
+        <p><strong>Task Instruction: </strong><em>"Turn on the Stove and Put the Moka Pot on it"</em></p>
+        <div class="buttons is-centered" style="margin-bottom:1rem;">
+          <button id="prev-btn" class="button is-light">&larr; Previous</button>
+          <button id="next-btn" class="button is-light">Next &rarr;</button>
+        </div>
+        <div class="video-grid">
+          <!-- Row 0 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_ref_match_0.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_0.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_0.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_0.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_0.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 1 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_ref_match_1.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_1.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_1.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_1.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_1.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 2 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_ref_match_2.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 3 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_ref_match_3.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_3.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_3.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_3.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_3.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 4 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_ref_match_4.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_4.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_4.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_4.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_4.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+             <div class="task-panel" data-task="2">
+        <p><strong>Task Instruction: </strong><em>"Pick up the Book and Place it in the Back Compartment of the Caddy"</em></p>
+        <div class="buttons is-centered" style="margin-bottom:1rem;">
+          <button id="prev-btn" class="button is-light">&larr; Previous</button>
+          <button id="next-btn" class="button is-light">Next &rarr;</button>
+        </div>
+        <div class="video-grid">
+          <!-- Row 0 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/STUDY_SCENE1_pick_up_the_book_and_place_it_in_the_back_compartment_of_the_caddy_ref_match_0.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/STUDY_SCENE1_pick_up_the_book_and_place_it_in_the_back_compartment_of_the_caddy_match_0.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/STUDY_SCENE1_pick_up_the_book_and_place_it_in_the_back_compartment_of_the_caddy_match_0.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/STUDY_SCENE1_pick_up_the_book_and_place_it_in_the_back_compartment_of_the_caddy_match_0.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_0.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 1 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/STUDY_SCENE1_pick_up_the_book_and_place_it_in_the_back_compartment_of_the_caddy_ref_match_1.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/STUDY_SCENE1_pick_up_the_book_and_place_it_in_the_back_compartment_of_the_caddy_match_1.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/STUDY_SCENE1_pick_up_the_book_and_place_it_in_the_back_compartment_of_the_caddy_match_1.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/STUDY_SCENE1_pick_up_the_book_and_place_it_in_the_back_compartment_of_the_caddy_match_1.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_1.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 2 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/STUDY_SCENE1_pick_up_the_book_and_place_it_in_the_back_compartment_of_the_caddy_ref_match_2.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/STUDY_SCENE1_pick_up_the_book_and_place_it_in_the_back_compartment_of_the_caddy_match_2.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/STUDY_SCENE1_pick_up_the_book_and_place_it_in_the_back_compartment_of_the_caddy_match_2.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/STUDY_SCENE1_pick_up_the_book_and_place_it_in_the_back_compartment_of_the_caddy_match_2.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 3 -->
+            <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/STUDY_SCENE1_pick_up_the_book_and_place_it_in_the_back_compartment_of_the_caddy_ref_match_3.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/STUDY_SCENE1_pick_up_the_book_and_place_it_in_the_back_compartment_of_the_caddy_match_3.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/STUDY_SCENE1_pick_up_the_book_and_place_it_in_the_back_compartment_of_the_caddy_match_3.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/STUDY_SCENE1_pick_up_the_book_and_place_it_in_the_back_compartment_of_the_caddy_match_3.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+          <!-- Panel for Task 2 -->
+      <div class="task-panel" data-task="3">
+        <p><strong>Task Instruction: </strong><em>"Put the Black Bowl in the Bottom Drawer of the Cabinet and Close it"</em></p>
+        <div class="buttons is-centered" style="margin-bottom:1rem;">
+          <button id="prev-btn" class="button is-light">&larr; Previous</button>
+          <button id="next-btn" class="button is-light">Next &rarr;</button>
+        </div>
+        <div class="video-grid">
+          <!-- Row 0 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE4_put_the_black_bowl_in_the_bottom_drawer_of_the_cabinet_and_close_it_ref_match_0.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE4_put_the_black_bowl_in_the_bottom_drawer_of_the_cabinet_and_close_it_match_0.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/KITCHEN_SCENE4_put_the_black_bowl_in_the_bottom_drawer_of_the_cabinet_and_close_it_match_0.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/KITCHEN_SCENE4_put_the_black_bowl_in_the_bottom_drawer_of_the_cabinet_and_close_it_match_0.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_0.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 1 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE4_put_the_black_bowl_in_the_bottom_drawer_of_the_cabinet_and_close_it_ref_match_1.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE4_put_the_black_bowl_in_the_bottom_drawer_of_the_cabinet_and_close_it_match_1.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/KITCHEN_SCENE4_put_the_black_bowl_in_the_bottom_drawer_of_the_cabinet_and_close_it_match_1.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/KITCHEN_SCENE4_put_the_black_bowl_in_the_bottom_drawer_of_the_cabinet_and_close_it_match_1.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_1.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 2 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE4_put_the_black_bowl_in_the_bottom_drawer_of_the_cabinet_and_close_it_ref_match_2.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE4_put_the_black_bowl_in_the_bottom_drawer_of_the_cabinet_and_close_it_match_2.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/KITCHEN_SCENE4_put_the_black_bowl_in_the_bottom_drawer_of_the_cabinet_and_close_it_match_2.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/KITCHEN_SCENE4_put_the_black_bowl_in_the_bottom_drawer_of_the_cabinet_and_close_it_match_2.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 3 -->
+        </div>
+      </div>
+
+
+      <div class="task-panel" data-task="4">
+        <p><strong> Task Instruction:</strong> <em>"Put Both the Alphabet Soup and the Tomato Sauce in the Basket"</em></p>
+        <div class="buttons is-centered" style="margin-bottom:1rem;">
+          <button id="prev-btn" class="button is-light">&larr; Previous</button>
+          <button id="next-btn" class="button is-light">Next &rarr;</button>
+        </div>
+        <div class="video-grid">
+          <!-- Row 0 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_ref_match_0.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_match_0.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_match_0.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_match_0.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_0.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 1 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_ref_match_1.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_match_1.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_match_1.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_match_1.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_1.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 2 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_ref_match_2.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_match_2.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_match_2.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_match_2.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 3 -->
+
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_ref_match_3.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_match_3.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_match_3.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_match_3.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_ref_match_4.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_match_4.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_match_4.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_match_4.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_ref_match_5.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_match_5.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_match_5.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_match_5.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_ref_match_6.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_match_6.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_match_6.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_match_6.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+        </div>
+      </div>
+        <div class="task-panel" data-task="5">
+        <p><strong>  Task Instruction: </strong> <em>"Put the Yellow and White Mug in the Microwave and Close it"</em></p>
+        <div class="buttons is-centered" style="margin-bottom:1rem;">
+          <button id="prev-btn" class="button is-light">&larr; Previous</button>
+          <button id="next-btn" class="button is-light">Next &rarr;</button>
+        </div>
+        <div class="video-grid">
+          <!-- Row 0 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_ref_match_0.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_0.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_0.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_0.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_0.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 1 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_ref_match_1.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_1.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_1.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_1.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_1.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 2 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_ref_match_2.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_2.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_2.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_2.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 3 -->
+
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_ref_match_3.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_3.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_3.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_3.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_ref_match_4.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_4.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_4.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_4.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_ref_match_5.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_5.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_5.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_5.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_ref_match_6.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_6.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_6.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_6.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_ref_match_7.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_7.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_7.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_7.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+             <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_ref_match_8.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_8.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_8.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_8.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+             <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_ref_match_9.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_9.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_9.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_9.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+             <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_ref_match_10.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_10.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_10.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it_match_10.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+       <div class="task-panel" data-task="6">
+        <p><strong> Task Instruction: </strong><em>"Put the White Mug on the Left Plate and Put the Yellow and White Mug on the Right Plate"</em></p>
+        <div class="buttons is-centered" style="margin-bottom:1rem;">
+          <button id="prev-btn" class="button is-light">&larr; Previous</button>
+          <button id="next-btn" class="button is-light">Next &rarr;</button>
+        </div>
+        <div class="video-grid">
+          <!-- Row 0 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE5_put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_right_plate_ref_match_0.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE5_put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_right_plate_match_0.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE5_put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_right_plate_match_0.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE5_put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_right_plate_match_0.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_0.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 1 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE5_put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_right_plate_ref_match_1.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE5_put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_right_plate_match_1.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE5_put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_right_plate_match_1.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE5_put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_right_plate_match_1.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_1.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 2 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE5_put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_right_plate_ref_match_2.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE5_put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_right_plate_match_2.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE5_put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_right_plate_match_2.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE5_put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_right_plate_match_2.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 3 -->
+
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE5_put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_right_plate_ref_match_3.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE5_put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_right_plate_match_3.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE5_put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_right_plate_match_3.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE5_put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_right_plate_match_3.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE5_put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_right_plate_ref_match_4.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE5_put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_right_plate_match_4.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE5_put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_right_plate_match_4.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE5_put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_right_plate_match_4.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+      
+        </div>
+      </div>
+
+
+        <div class="task-panel" data-task="7">
+        <p><strong>Task Instruction: </strong><em>"Put the White Mug on the Plate and Put the Chocolate Pudding to the Right of the Plate"</em></p>
+        <div class="buttons is-centered" style="margin-bottom:1rem;">
+          <button id="prev-btn" class="button is-light">&larr; Previous</button>
+          <button id="next-btn" class="button is-light">Next &rarr;</button>
+        </div>
+        <div class="video-grid">
+          <!-- Row 0 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_ref_match_0.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_match_0.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_match_0.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_match_0.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_0.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 1 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_ref_match_1.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_match_1.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_match_1.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_match_1.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_1.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 2 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_ref_match_2.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_match_2.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_match_2.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_match_2.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 3 -->
+
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_ref_match_3.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_match_3.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_match_3.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_match_3.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_ref_match_4.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_match_4.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_match_4.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_match_4.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+           <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_ref_match_5.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_match_5.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_match_5.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_match_5.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+          </div>
+        </div>
+         <div class="task-panel" data-task="8">
+        <p><strong>Task Instruction: </strong> <em>"Put Both the Alphabet Soup and the Cream Cheese Box in the Basket"</em></p>
+        <div class="buttons is-centered" style="margin-bottom:1rem;">
+          <button id="prev-btn" class="button is-light">&larr; Previous</button>
+          <button id="next-btn" class="button is-light">Next &rarr;</button>
+        </div>
+        <div class="video-grid">
+          <!-- Row 0 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket_ref_match_0.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket_match_0.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket_match_0.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket_match_0.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_0.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 1 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket_ref_match_1.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket_match_1.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket_match_1.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket_match_1.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_1.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 2 -->
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket_ref_match_2.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket_match_2.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket_match_2.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket_match_2.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <!-- Row 3 -->
+
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket_ref_match_3.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket_match_3.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket_match_3.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket_match_3.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+          <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket_ref_match_4.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket_match_4.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket_match_4.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket_match_4.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+           <div class="video-row">
+            <video class="ref-video" autoplay muted loop playsinline controls>
+              <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket_ref_match_5.mp4" type="video/mp4">
+            </video>
+            <div class="result-videos">
+              <video autoplay muted loop playsinline controls class="dino-video">
+                <source src="./static/videos/matches_dino_videos2/LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket_match_5.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="flow-video">
+                <source src="./static/videos/matches_flow_videos2/LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket_match_5.mp4" type="video/mp4">
+              </video>
+              <video autoplay muted loop playsinline controls class="pointnet-video">
+                <source src="./static/videos/matches_pointnet_videos2/LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket_match_5.mp4" type="video/mp4">
+              </video>
+              <!-- <video autoplay muted loop playsinline controls>
+                <source src="./static/videos/matches_dino_videos/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it_match_2.mp4" type="video/mp4">
+              </video> -->
+            </div>
+          </div>
+
+      
+        </div>
+      </div>
+
+
+    </div>
+  </section>
+
+  <!-- SCRIPTS -->
+  <script>
+    const panels = Array.from(document.querySelectorAll('.task-panel'));
+    let current = 0;
+    function showPanel(i) {
+      panels[current].style.display = 'none';
+      current = (i + panels.length) % panels.length;
+      panels[current].style.display = 'block';
+    }
+    document.querySelectorAll('#prev-btn').forEach(btn => btn.onclick = () => showPanel(current - 1));
+    document.querySelectorAll('#next-btn').forEach(btn => btn.onclick = () => showPanel(current + 1));
+
+    // Initialize
+    panels.forEach((p, i) => p.style.display = i === 0 ? 'block' : 'none');
+  </script>
+
+<!-- <section class="section">
+  <div class="container is-max-desktop has-text-centered">
+    <h2 class="title is-3">Why use multiple feature modalities for retrieval?</h2>
+    <p class="subtitle is-6">
+      Below, we illustrate the benefits of leveraging on multiple modalities for data retrieval and using COLLAGE to fuse them.
+    </p> 
+
+    <!-- Book Place task -->
+<!--    <p class="subtitle is-6">
+      Retrieved data for the task of <strong>Place the Book in the Back Compartment of the Caddy</strong>.
+    </p>
+    <figure class="image" style="margin-bottom: 2rem;">
+      <img
+        src="./static/images/book_caddy_4feats.png"
+        alt="Retrieved data for Book Place task"
+        style="max-width:100%;"
+      />
+      <figcaption>
+        <!-- Although the instruction <strong>“Place the Book in the Back Compartment of the Caddy”</strong> matches exactly, visual-only retrieval from the prior dataset misses these segments due to appearance differences.
+        For this task, the target demonstration involves placing the book in the back compartment of a caddy. The prior dataset contains two helpful types of segments: (1) those with the same scene but a different end-pose, where the book is placed in the front compartment—these are reliably retrieved using visual similarity; and (2) those with the same task but different scene appearance, where the book is correctly placed in the back compartment but the visual context differs—these are primarily retrieved using motion and language cues. Since each modality recovers complementary subsets of relevant data, fusing them in COLLAGE raises accuracy from 66.00 % (visual only) to 89.33 %, yielding an absolute gain of 23.33 percentage points.
+    </figcaption>
+    </figure> 
+
+    <!-- Cheese Butter task 
+    <p class="subtitle is-6">
+      Retrieved data for the task of <strong>Put Both the Cream Cheese Box and the Butter in the Basket</strong>.
+    </p>
+    <figure class="image">
+      <img
+        src="./static/images/cheese_butter_4feats.png"
+        alt="Retrieved data for Cheese Butter task"
+        style="max-width:100%;"
+      />
+      <figcaption>
+        In the Cheese Butter task, shape-based retrieval from the prior dataset retrieves far more examples from “Pick up Butter..” and “Pick up Tomato Sauce..” than visual- or motion-based retrieval. These segments provide direct, task-relevant demonstrations of placing similarly shaped objects into the basket. Consequently, the shape modality outperforms both visual and motion, and COLLAGE assigns it the highest weight—yielding performance on par with shape-only retrieval.
+      </figcaption>
+    </figure>
+  </div>
+</section> -->
+
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="content has-text-centered">
+        <p>
+          This website is based on the <a href="https://nerfies.github.io/">Nerfies</a> website template,
+          licensed under a <a href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Glide JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@glidejs/glide@3.6.0/dist/glide.min.js"></script>
+  <script>
+    window.addEventListener('load', function () {
+      new Glide('.glide', {
+        type: 'carousel',
+        rewind: false,
+        perView: 3,
+        focusAt: 'center',
+        gap: 24,
+        breakpoints: {
+          1024: { perView: 2 },
+          768: { perView: 1 }
+        }
+      }).mount();
+    });
+  </script>
+</body>
+</html>
