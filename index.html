@@ -148,8 +148,8 @@
     <div class="column is-four-fifths">
     <div class="content has-text-justified">
         <p>
-    <strong>TL;DR:</strong> Few-shot imitation learning by retrieving sub-trajectories using diverse similarity metrics and adaptively weighting the retrieved data based on how well it aligns with target demonstrations under a learned policy.
-    </p>
+    <strong>TL;DR:</strong> COLLAGE is a few-shot imitation learning method that adaptively fuses demonstration subsets retrieved from a large-scale dataset using different similarity modalities.
+It estimates each modality’s usefulness by training an imitation learning policy on its retrieved data and measuring how likely it is to produce the target actions, achieving 57% higher real-world success and 10% higher simulation success compared to prior methods.</p>
     </div>
     </div>
     </div>
@@ -1456,9 +1456,26 @@
         </div>
       </div>
 
-
+     
+    
+    
     </div>
+
   </section>
+
+   <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>
+       @article{kumar2025collage,
+        title={COLLAGE: Adaptive Fusion-based Retrieval for Augmented Policy Learning},
+        author={Kumar, Sateesh and Dass, Shivin and Pavlakos, Georgios and Mart{\'\i}n-Mart{\'\i}n, Roberto},
+        journal={arXiv preprint arXiv:2508.01131},
+        year={2025}
+  }
+      </code></pre>
+    </div>
+</section>
 
   <!-- SCRIPTS -->
   <script>
@@ -1475,6 +1492,7 @@
     // Initialize
     panels.forEach((p, i) => p.style.display = i === 0 ? 'block' : 'none');
   </script>
+
 
 <!-- <section class="section">
   <div class="container is-max-desktop has-text-centered">
