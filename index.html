@@ -146,10 +146,12 @@
   <div class="container is-max-desktop">
     <div class="columns is-centered has-text-centered">    
     <div class="column is-four-fifths">
-    <div class="content has-text-justified">
-        <p>
-    <strong>TL;DR:</strong> COLLAGE is a few-shot imitation learning method that adaptively fuses demonstration subsets retrieved from a large-scale dataset using different similarity modalities.
-It estimates each modality’s usefulness by training an imitation learning policy on its retrieved data and measuring how likely it is to produce the target actions, achieving 57% higher real-world success and 10% higher simulation success compared to prior methods.</p>
+  <div class="content has-text-justified" style="background:#f0f0f0; padding:20px 24px; border:1px solid #ccc; border-radius:6px;">
+  <p style="margin:0;">
+     <strong>TL;DR:</strong> We present <strong>COLLAGE</strong>, a few-shot imitation learning method that fuses data subsets retrieved from large-scale datasets using multiple measures of similarity to the target task. It scores each subset by training an imitation learning policy on it, measuring how likely it is to produce the target actions, and uses these scores to prioritize the most effective data during training.
+  </p>
+</div>
+    </div>
     </div>
     </div>
     </div>
