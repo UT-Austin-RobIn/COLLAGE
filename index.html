@@ -146,7 +146,7 @@
   <div class="container is-max-desktop">
     <div class="columns is-centered has-text-centered">    
     <div class="column is-four-fifths">
-  <div class="content has-text-justified" style="background:#f0f0f0; padding:20px 24px; border:1px solid #ccc; border-radius:6px;">
+  <div class="content " style="background:#f0f0f0; padding:20px 24px; border:1px solid #ccc; border-radius:6px;">
   <p style="margin:0;">
      <strong>TL;DR:</strong> We present <strong>COLLAGE</strong>, a few-shot imitation learning method that fuses data subsets retrieved from large-scale datasets using multiple measures of similarity to the target task. It scores each subset by training an imitation learning policy on it, measuring how likely it is to produce the target actions, and uses these scores to prioritize the most effective data during training.
   </p>
@@ -204,7 +204,7 @@
     <source src="./static/images/method_overview_v2.mp4" type="video/mp4" />
     Your browser does not support the video tag.
   </video>
-  <figcaption class="method-caption">
+  <figcaption class="method-caption has-text-justified">
   <strong>Overview of COLLAGE.</strong>
   <strong>1:</strong> Given a set of target demonstrations, each modality (e.g., visual, motion, shape, or language) retrieves a set of similar (sub-)trajectories from a prior dataset of diverse demonstrations. <strong>2:</strong> We use the retrieved (sub-)trajectories for each modality to train a reference policy. For each reference policy, we compute the log-likelihood of the target trajectories — that is, how well the policy predicts the target actions at each target state. These log-likelihoods are used to assign importance weights to the modalities. 
    <strong>3:</strong> We train the final policy using all retrieved data, sampling more frequently from modalities with higher weights.
@@ -265,6 +265,7 @@
   <div class="columns is-centered has-text-centered">
     <div class="column is-full">
       <h2 class="title is-3">Qualitative Results</h2>
+      <div class="has-text-justified">
       <p>
         Below shows the demonstration segments (<strong style="color:#ebff38;">◼</strong>) from LIBERO-10
         and retrieved sub-trajectories from LIBERO-90 using the visual (<strong style="color:#A87763;">◼</strong>),
@@ -273,9 +274,11 @@
         the <em>motion</em> modality finds those sharing similar motion patterns using Optical Flow features;
         and the <em>shape</em> modality selects ones with comparable geometry using PointNet features.
       </p>
+ </div>
       <p class="has-text-grey">
         Click the ← and → arrows to navigate through all tasks.
       </p>
+     
     </div>
   </div>
 </div>
