@@ -109,7 +109,7 @@
     </div>
   </section>
   <!-- Rollout Carousel -->
-  <section class="section">
+  <section class="section no-alt">
     <div class="container is-max-desktop">
       <h2 class="title is-3 has-text-centered">Policy Rollouts with COLLAGE</h2>
       <figure>
@@ -144,18 +144,16 @@
   </section>
   <!-- Abstract -->
   <div class="container is-max-desktop">
-    <div class="columns is-centered has-text-centered">    
+  <div class="columns is-centered has-text-centered">    
     <div class="column is-four-fifths">
-  <div class="content " style="background:#f0f0f0; padding:20px 24px; border:1px solid #ccc; border-radius:6px;">
-  <p style="margin:0;">
-     <strong>TL;DR:</strong> We present <strong>COLLAGE</strong>, a few-shot imitation learning method that fuses data subsets retrieved from large-scale datasets using multiple measures of similarity to the target task. It scores each subset by training an imitation learning policy on it, measuring how likely it is to produce the target actions, and uses these scores to prioritize the most effective data during training.
-  </p>
-</div>
-    </div>
-    </div>
-    </div>
+      <div class="content" style="background:#f0f0f0; padding:20px 24px; border:1px solid #ccc; border-radius:6px;">
+        <p style="margin:0;">
+          <strong>TL;DR:</strong> We present <strong>COLLAGE</strong>, a few-shot imitation learning method that fuses data subsets retrieved from large-scale datasets using multiple measures of similarity to the target task. It scores each subset by training an imitation learning policy on it, measuring how likely it is to produce the target actions, and uses these scores to prioritize the most effective data during training.
+        </p>
+      </div>
     </div>
   </div>
+</div>
 
   <section class="section">
     <div class="container is-max-desktop">
@@ -177,7 +175,7 @@
   </section>
 
 
-  <section class="section">
+  <section class="section no-alt">
     <div class="container is-max-desktop has-text-centered">
       <h2 class="title is-3">Video</h2>
       <!-- <p class="subtitle is-6">
@@ -216,10 +214,10 @@
   
 
   <!-- Experiments -->
-  <section class="section">
+  <section class="section no-alt">
     <div class="container is-max-desktop">
       <div class="columns is-centered has-text-centered">
-        <div class="column is-full">
+        <div class="column is-full ">
           <h2 class="title is-3">Experiments</h2>
           <div class="content">
             <h3 class="title is-4">Simulated Experiments</h3>
@@ -250,11 +248,13 @@
       <h2 class="title is-3 has-text-centered">Importance Weights Predicted by COLLAGE</h2>
       <div class="has-text-centered">
         <figure class="image" style="max-width: 950px; width: 100%; margin: 0 auto;">
-          <img src="./static/images/modality_weights_pie_chart.png" alt="Modality Weights Pie Chart" style="width: 100%; height: auto; border-radius: 8px;">
-          <figcaption style="margin-top: 0.75rem; font-size: 1rem; color: #444;">
-            <figcaption style="margin-top: 0.75rem;">
-                Importance weights assigned by <strong>COLLAGE</strong> to different modalities used in our framework (Visual, Motion, Shape, Language).              
-          </figcaption>
+        <img src="./static/images/modality_weights_pie_chart.png"
+            alt="Pie chart showing COLLAGE’s predicted importance weights across Visual, Motion, Shape, Language"
+            style="width: 100%; height: auto; border-radius: 8px;"
+            loading="lazy">
+        <figcaption style="margin-top: 0.75rem;">
+          Importance weights assigned by <strong>COLLAGE</strong> to different modalities (Visual, Motion, Shape, Language).
+        </figcaption>
         </figure>
       </div>
     </div>

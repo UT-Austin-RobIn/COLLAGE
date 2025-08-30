@@ -173,3 +173,11 @@ figure figcaption {
   object-fit: cover;
   border-radius: 6px;
 }s
+
+
+section.section:not(.no-alt):nth-of-type(odd) {
+  background-color: #ffffff;
+}
+section.section:not(.no-alt):nth-of-type(even) {
+  background-color: #f7f7f7; /* light grey */
+}
